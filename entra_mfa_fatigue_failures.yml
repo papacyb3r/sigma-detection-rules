@@ -1,0 +1,28 @@
+title: Entra ID Repeated MFA Failures For A User
+id: 3495e263-8632-4931-8d7d-2b831376fdfd
+status: experimental
+description: >
+  Detects Entra ID sign-in events where the MFA step failed (result code 500121).
+  Apply a threshold in your SIEM, for example 5 or more per user within 10 minutes,
+  to find MFA fatigue (push bombing) or repeated attempts with stolen passwords.
+author: E.O. Acheampong
+date: 2026-11-09
+references:
+  - https://attack.mitre.org/techniques/T1621/
+logsource:
+  product: azure
+  service: signinlogs
+detection:
+  selection:
+    ResultType: 500121
+  condition: selection
+fields:
+  - UserPrincipalName
+  - IPAddress
+  - AppDisplayName
+falsepositives:
+  - Users who repeatedly mistype or ignore legitimate prompts
+level: medium
+tags:
+  - attack.credential-access
+  - attack.t1621
