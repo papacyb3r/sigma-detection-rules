@@ -1,0 +1,26 @@
+title: PowerShell Encoded Command Execution
+id: 7bd2f3c5-a6ec-490d-bb3f-11a1ca9a63a2
+status: experimental
+description: Detects PowerShell launched with an encoded command, a technique commonly used to hide script content from casual inspection.
+author: Papa
+date: 2026-11-09
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_cli:
+        CommandLine|contains:
+            - ' -enc '
+            - ' -encodedcommand '
+            - ' -ec '
+    condition: selection_image and selection_cli
+falsepositives:
+    - Legitimate administration scripts and software deployment tools that pass encoded commands
+level: medium
