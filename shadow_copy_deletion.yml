@@ -1,0 +1,23 @@
+title: Volume Shadow Copy Deletion via Vssadmin
+id: 11d6d3c3-3aca-4fa6-95f5-e87ed7cc52fe
+status: experimental
+description: Detects deletion of volume shadow copies with vssadmin, a step commonly seen before ransomware encryption to prevent recovery.
+author: Papa
+date: 2026-11-09
+tags:
+    - attack.impact
+    - attack.t1490
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith: '\vssadmin.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            - 'delete'
+            - 'shadows'
+    condition: selection_image and selection_cli
+falsepositives:
+    - Backup or storage maintenance performed by administrators
+level: high
