@@ -1,0 +1,32 @@
+title: AWS CloudTrail Logging Stopped Or Trail Deleted
+id: a63039b5-c422-400f-8983-b465dee7e90d
+status: experimental
+description: >
+  Detects CloudTrail trails being stopped, deleted or modified. Attackers do this
+  to hide their activity.
+author: E.O. Acheampong
+date: 2026-11-09
+references:
+  - https://attack.mitre.org/techniques/T1562/008/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - StopLogging
+      - DeleteTrail
+      - UpdateTrail
+      - PutEventSelectors
+  condition: selection
+fields:
+  - userIdentity.arn
+  - sourceIPAddress
+  - requestParameters
+falsepositives:
+  - Planned logging configuration changes by the cloud team
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1562.008
