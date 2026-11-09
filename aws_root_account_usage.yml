@@ -1,0 +1,30 @@
+title: AWS Root Account Activity
+id: 30422580-9cbb-4bb2-8229-312edf9f88a9
+status: experimental
+description: >
+  Detects API activity performed by the AWS root user. Root should be used only for
+  a small number of account-level tasks, so any use deserves review.
+author: E.O. Acheampong
+date: 2026-11-09
+references:
+  - https://attack.mitre.org/techniques/T1078/004/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    userIdentity.type: Root
+  filter_service_event:
+    eventType: AwsServiceEvent
+  condition: selection and not filter_service_event
+fields:
+  - eventName
+  - sourceIPAddress
+  - userAgent
+falsepositives:
+  - Planned break-glass or account-level tasks that require root
+level: high
+tags:
+  - attack.initial-access
+  - attack.privilege-escalation
+  - attack.t1078.004
